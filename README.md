@@ -21,7 +21,7 @@ composer require mbeurel/php-lemmatizer
 
 ## Examples
 
-Example scripts are available ina separate repository [php-lemmatizer/examples](https://github.com/mbeurel/php-lemmatizer/tree/master/exemple).
+Example scripts are available ina separate repository [php-lemmatizer/example](https://github.com/mbeurel/php-lemmatizer/tree/master/exemple).
 
 ## Sample Code
 ```php
