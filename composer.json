@@ -1,0 +1,35 @@
+{
+    "name":                             "mbeurel/php-lemmatizer",
+    "type":                             "library",
+    "description":                      "PHP Wrapper for the TreeTagger library",
+    "keywords":                         [
+        "TreeTagger",
+        "PHP",
+        "lemmatizer"
+    ],
+    "homepage":                         "https://github.com/mbeurel/php-lemmatizer",
+    "license":                          "MIT",
+    "authors": [
+        {
+            "name":                     "Matthieu Beurel",
+            "email":                    "m.beurel@nexboard.fr",
+            "homepage":                 "https://www.nexboard.fr"
+        },
+        {
+            "name":                     "Clément Meunier",
+            "email":                    "c.meunier@nexboard.fr",
+            "homepage":                 "https://www.nexboard.fr"
+        }
+    ],
+    "require": {
+        "ext-json":                     "*",
+        "php":                          "^7.1",
+        "symfony/process":              "^4.1"
+    },
+    "require-dev": {
+        "symfony/debug-pack":           "^1.0.6"
+    },
+    "autoload": {
+        "psr-4": { "PhpTreeTagger\\": "lib" }
+    }
+}
