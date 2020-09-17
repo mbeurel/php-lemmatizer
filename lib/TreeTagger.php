@@ -4,6 +4,7 @@
 namespace PhpTreeTagger;
 
 
+use Austral\ToolsBundle\Tools\AustralTools;
 use PhpTreeTagger\Tools\ToolsTrait;
 use Symfony\Component\Process\Process;
 class TreeTagger
@@ -74,10 +75,9 @@ class TreeTagger
     $this->language = $language;
 
     $this->debug = (isset($config["debug"]) && $config["debug"]) ? $config["debug"] : false;
-    $this->uniqueWord = (isset($config["uniqueWord"]) && $config["uniqueWord"]) ? $config["uniqueWord"] : false;
-    $this->removeAccent = (isset($config["removeAccent"]) && $config["removeAccent"]) ? $config["removeAccent"] : false;
+    $this->uniqueWord = (isset($config["wordUnique"]) && $config["wordUnique"]) ? $config["wordUnique"] : false;
+    $this->removeAccent = (isset($config["wordRemoveAccent"]) && $config["wordRemoveAccent"]) ? $config["wordRemoveAccent"] : false;
     $this->nbProcess = (isset($config["nbProcess"]) && $config["nbProcess"]) ? ($config["nbProcess"] > 0 ? $config["nbProcess"] : 1) : 4;
-
     $treeTaggerPath = (isset($config["treeTaggerPath"]) && $config["treeTaggerPath"]) ? $config["treeTaggerPath"] : "";
     if(!$treeTaggerPath)
     {
@@ -89,6 +89,34 @@ class TreeTagger
     $this->parFilePath = sprintf("%s/lib/%s.par", $treeTaggerPath, $this->language);
     $this->verifyLibrary();
   }
+
+  /**
+   * @param array $options
+   *
+   * @return $this
+   */
+  public function setOptions(array $options = array())
+  {
+    if(array_key_exists("debug", $options))
+    {
+      $this->debug = $options["debug"];
+    }
+    if(array_key_exists("wordUnique", $options))
+    {
+      $this->uniqueWord = $options["wordUnique"];
+    }
+    if(array_key_exists("wordRemoveAccent", $options))
+    {
+      $this->removeAccent = $options["wordRemoveAccent"];
+    }
+    if(array_key_exists("nbProcess", $options))
+    {
+      $this->nbProcess = $options["nbProcess"];
+    }
+    return $this;
+  }
+
+
 
   /**
    * @throws \Exception
@@ -258,22 +286,28 @@ class TreeTagger
     {
       if($elements)
       {
-        list($source, $type, $dest) = explode("\t", $elements);
-        if(!in_array($type, $this->getCleanTypeWords()))
+        $elementsArray = explode("\t", $elements);
+        $source = AustralTools::getValueByKey($elementsArray, 0, null);
+        $type = AustralTools::getValueByKey($elementsArray, 1, null);
+        $dest = AustralTools::getValueByKey($elementsArray, 2, null);
+        if($source && $type && $dest)
         {
-          $usedSource = false;
-          if($dest == "<unknown>")
+          if(!in_array($type, $this->getCleanTypeWords()))
           {
-            $usedSource = true;
+            $usedSource = false;
+            if($dest == "<unknown>")
+            {
+              $usedSource = true;
+            }
+            $value = $usedSource ? strtolower($source) : $dest;
+            $value = $this->removeAccent ? $this->removeAccents($value) : $value;
+            $finalArray[$this->uniqueWord ? $value : $key] = $value;
+            $detailArray[$key] = array(
+              "source"    =>  $source,
+              "type"      =>  $type,
+              "dest"      =>  $dest
+            );
           }
-          $value = $usedSource ? strtolower($source) : $dest;
-          $value = $this->removeAccent ? $this->removeAccents($value) : $value;
-          $finalArray[$this->uniqueWord ? $value : $key] = $value;
-          $detailArray[$key] = array(
-            "source"    =>  $source,
-            "type"      =>  $type,
-            "dest"      =>  $dest
-          );
         }
       }
     }
