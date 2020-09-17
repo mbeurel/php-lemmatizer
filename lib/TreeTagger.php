@@ -286,9 +286,9 @@ class TreeTagger
       if($elements)
       {
         $elementsArray = explode("\t", $elements);
-        $source = AustralTools::getValueByKey($elementsArray, 0, null);
-        $type = AustralTools::getValueByKey($elementsArray, 1, null);
-        $dest = AustralTools::getValueByKey($elementsArray, 2, null);
+        $source =array_key_exists(0, $elementsArray) ? $elementsArray[0] : null;
+        $type =array_key_exists(1, $elementsArray) ? $elementsArray[0] : null;
+        $dest =array_key_exists(2, $elementsArray) ? $elementsArray[0] : null;
         if($source && $type && $dest)
         {
           if(!in_array($type, $this->getCleanTypeWords()))
