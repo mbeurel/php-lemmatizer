@@ -4,7 +4,6 @@
 namespace PhpTreeTagger;
 
 
-use Austral\ToolsBundle\Tools\AustralTools;
 use PhpTreeTagger\Tools\ToolsTrait;
 use Symfony\Component\Process\Process;
 class TreeTagger
@@ -75,8 +74,8 @@ class TreeTagger
     $this->language = $language;
 
     $this->debug = (isset($config["debug"]) && $config["debug"]) ? $config["debug"] : false;
-    $this->uniqueWord = (isset($config["wordUnique"]) && $config["wordUnique"]) ? $config["wordUnique"] : false;
-    $this->removeAccent = (isset($config["wordRemoveAccent"]) && $config["wordRemoveAccent"]) ? $config["wordRemoveAccent"] : false;
+    $this->uniqueWord = (isset($config["uniqueWord"]) && $config["uniqueWord"]) ? $config["uniqueWord"] : false;
+    $this->removeAccent = (isset($config["removeAccent"]) && $config["removeAccent"]) ? $config["removeAccent"] : false;
     $this->nbProcess = (isset($config["nbProcess"]) && $config["nbProcess"]) ? ($config["nbProcess"] > 0 ? $config["nbProcess"] : 1) : 4;
     $treeTaggerPath = (isset($config["treeTaggerPath"]) && $config["treeTaggerPath"]) ? $config["treeTaggerPath"] : "";
     if(!$treeTaggerPath)
@@ -101,13 +100,13 @@ class TreeTagger
     {
       $this->debug = $options["debug"];
     }
-    if(array_key_exists("wordUnique", $options))
+    if(array_key_exists("uniqueWord", $options))
     {
-      $this->uniqueWord = $options["wordUnique"];
+      $this->uniqueWord = $options["uniqueWord"];
     }
-    if(array_key_exists("wordRemoveAccent", $options))
+    if(array_key_exists("removeAccent", $options))
     {
-      $this->removeAccent = $options["wordRemoveAccent"];
+      $this->removeAccent = $options["removeAccent"];
     }
     if(array_key_exists("nbProcess", $options))
     {
