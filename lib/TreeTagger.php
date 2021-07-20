@@ -287,8 +287,8 @@ class TreeTagger
       {
         $elementsArray = explode("\t", $elements);
         $source =array_key_exists(0, $elementsArray) ? $elementsArray[0] : null;
-        $type =array_key_exists(1, $elementsArray) ? $elementsArray[0] : null;
-        $dest =array_key_exists(2, $elementsArray) ? $elementsArray[0] : null;
+        $type =array_key_exists(1, $elementsArray) ? $elementsArray[1] : null;
+        $dest =array_key_exists(2, $elementsArray) ? $elementsArray[2] : null;
         if($source && $type && $dest)
         {
           if(!in_array($type, $this->getCleanTypeWords()))
