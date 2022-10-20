@@ -14,27 +14,27 @@ class TreeTagger
   /**
    * @var string
    */
-  protected $treeTaggerBinPath;
+  protected string $treeTaggerBinPath;
 
   /**
    * @var string
    */
-  protected $tokenizePerlCmdPath;
+  protected string $tokenizePerlCmdPath;
 
   /**
    * @var string
    */
-  protected $abbreviationsPath;
+  protected string $abbreviationsPath;
 
   /**
    * @var string
    */
-  protected $parFilePath;
+  protected string $parFilePath;
 
   /**
    * @var string
    */
-  protected $language;
+  protected string $language;
 
   /**
    * @var bool
@@ -59,7 +59,7 @@ class TreeTagger
   /**
    * @var array
    */
-  protected $cleanTypeWords = array();
+  protected array $cleanTypeWords = array();
 
   /**
    * TreeTagger constructor.
@@ -94,7 +94,7 @@ class TreeTagger
    *
    * @return $this
    */
-  public function setOptions(array $options = array())
+  public function setOptions(array $options = array()): TreeTagger
   {
     if(array_key_exists("debug", $options))
     {
@@ -114,8 +114,6 @@ class TreeTagger
     }
     return $this;
   }
-
-
 
   /**
    * @throws \Exception
@@ -152,8 +150,6 @@ class TreeTagger
   }
 
   /**
-   * @param array $cleanTypeWords
-   *
    * @return array
    */
   public function getCleanTypeWords() : array
@@ -166,7 +162,7 @@ class TreeTagger
    *
    * @return string
    */
-  protected function buildCommand(string $value)
+  protected function buildCommand(string $value): string
   {
     return sprintf("echo \"%s\" | %s -f -a %s | %s -token -lemma -sgml %s",
       $value,
@@ -183,13 +179,19 @@ class TreeTagger
    * @return array
    * @throws \Exception
    */
-  public function lemmatizer($data)
+  public function lemmatizer($data): array
   {
     $data = $this->toArray($data);
     return $this->executeProcess($data);
   }
 
-  protected function executeProcess($data)
+  /**
+   * @param $data
+   *
+   * @return array
+   * @throws \Exception
+   */
+  protected function executeProcess($data): array
   {
     $finaleArray = array();
     $processRun = array();
@@ -210,12 +212,12 @@ class TreeTagger
         $keyArray = array_key_first($data);
         $value = $data[$keyArray];
         unset($data[$keyArray]);
-        $commandeTexte = $this->buildCommand($value);
+        $commandText = $this->buildCommand($value);
         $process = array(
           "key"               =>  $keyArray,
           "value"             =>  $value,
-          "commande"          =>  new Process($commandeTexte),
-          "commandeTexte"     =>  $commandeTexte,
+          "commande"          =>  new Process([$commandText]),
+          "commandeTexte"     =>  $commandText,
           "numProcess"        =>  $numProcess
         );
         $process['commande']->start();
@@ -273,7 +275,7 @@ class TreeTagger
    *
    * @return array
    */
-  protected function handlingOutput(array $output)
+  protected function handlingOutput(array $output): array
   {
     $finalArray = array();
     $detailArray = array();

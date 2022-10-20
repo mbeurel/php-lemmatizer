@@ -12,22 +12,18 @@
     "authors": [
         {
             "name":                     "Matthieu Beurel",
-            "email":                    "m.beurel@nexboard.fr",
-            "homepage":                 "https://www.nexboard.fr"
-        },
-        {
-            "name":                     "Clément Meunier",
-            "email":                    "c.meunier@nexboard.fr",
-            "homepage":                 "https://www.nexboard.fr"
+            "email":                    "matthieu@mbeurel.com",
+            "homepage":                 "https://www.mbeurel.com"
         }
     ],
     "require": {
         "ext-json":                     "*",
-        "php":                          "^7.1",
-        "symfony/process":              "^4.1"
+        "php":                          "^7.4 | ^8.0",
+        "symfony/process":              "^5.4"
     },
     "require-dev": {
-        "symfony/debug-pack":           "^1.0.6"
+        "symfony/var-dumper":           "^5.4",
+        "symfony/debug-bundle":         "^5.4",
     },
     "autoload": {
         "psr-4": { "PhpTreeTagger\\": "lib" }
