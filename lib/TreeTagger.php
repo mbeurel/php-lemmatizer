@@ -14,27 +14,27 @@ class TreeTagger
   /**
    * @var string
    */
-  protected $treeTaggerBinPath;
+  protected string $treeTaggerBinPath;
 
   /**
    * @var string
    */
-  protected $tokenizePerlCmdPath;
+  protected string $tokenizePerlCmdPath;
 
   /**
    * @var string
    */
-  protected $abbreviationsPath;
+  protected string $abbreviationsPath;
 
   /**
    * @var string
    */
-  protected $parFilePath;
+  protected string $parFilePath;
 
   /**
    * @var string
    */
-  protected $language;
+  protected string $language;
 
   /**
    * @var bool
@@ -59,7 +59,7 @@ class TreeTagger
   /**
    * @var array
    */
-  protected $cleanTypeWords = array();
+  protected array $cleanTypeWords = array();
 
   /**
    * TreeTagger constructor.
@@ -94,7 +94,7 @@ class TreeTagger
    *
    * @return $this
    */
-  public function setOptions(array $options = array())
+  public function setOptions(array $options = array()): TreeTagger
   {
     if(array_key_exists("debug", $options))
     {
@@ -114,8 +114,6 @@ class TreeTagger
     }
     return $this;
   }
-
-
 
   /**
    * @throws \Exception
@@ -152,8 +150,6 @@ class TreeTagger
   }
 
   /**
-   * @param array $cleanTypeWords
-   *
    * @return array
    */
   public function getCleanTypeWords() : array
@@ -164,11 +160,11 @@ class TreeTagger
   /**
    * @param string $value
    *
-   * @return string
+   * @return
    */
   protected function buildCommand(string $value)
   {
-    return sprintf("echo \"%s\" | %s -f -a %s | %s -token -lemma -sgml %s",
+    return sprintf("/bin/echo \"%s\" | %s -f -a %s | %s -token -lemma -sgml %s",
       $value,
       $this->tokenizePerlCmdPath,
       $this->abbreviationsPath,
@@ -183,13 +179,19 @@ class TreeTagger
    * @return array
    * @throws \Exception
    */
-  public function lemmatizer($data)
+  public function lemmatizer($data, ?\Closure $functionGenerateProcess = null): array
   {
     $data = $this->toArray($data);
-    return $this->executeProcess($data);
+    return $this->executeProcess($data, $functionGenerateProcess);
   }
 
-  protected function executeProcess($data)
+  /**
+   * @param $data
+   *
+   * @return array
+   * @throws \Exception
+   */
+  protected function executeProcess($data, ?\Closure $functionGenerateProcess = null): array
   {
     $finaleArray = array();
     $processRun = array();
@@ -210,12 +212,18 @@ class TreeTagger
         $keyArray = array_key_first($data);
         $value = $data[$keyArray];
         unset($data[$keyArray]);
-        $commandeTexte = $this->buildCommand($value);
+        $commandText = $this->buildCommand($value);
+        if(!$functionGenerateProcess) {
+          $functionGenerateProcess = new Process([$commandText]);
+        }
+        else {
+          $process = $functionGenerateProcess->call($this, $commandText);
+        }
         $process = array(
           "key"               =>  $keyArray,
           "value"             =>  $value,
-          "commande"          =>  new Process($commandeTexte),
-          "commandeTexte"     =>  $commandeTexte,
+          "commande"          =>  $process,
+          "commandeTexte"     =>  $commandText,
           "numProcess"        =>  $numProcess
         );
         $process['commande']->start();
@@ -273,7 +281,7 @@ class TreeTagger
    *
    * @return array
    */
-  protected function handlingOutput(array $output)
+  protected function handlingOutput(array $output): array
   {
     $finalArray = array();
     $detailArray = array();
@@ -287,8 +295,8 @@ class TreeTagger
       {
         $elementsArray = explode("\t", $elements);
         $source =array_key_exists(0, $elementsArray) ? $elementsArray[0] : null;
-        $type =array_key_exists(1, $elementsArray) ? $elementsArray[0] : null;
-        $dest =array_key_exists(2, $elementsArray) ? $elementsArray[0] : null;
+        $type =array_key_exists(1, $elementsArray) ? $elementsArray[1] : null;
+        $dest =array_key_exists(2, $elementsArray) ? $elementsArray[2] : null;
         if($source && $type && $dest)
         {
           if(!in_array($type, $this->getCleanTypeWords()))
