@@ -160,9 +160,9 @@ class TreeTagger
   /**
    * @param string $value
    *
-   * @return
+   * @return string
    */
-  protected function buildCommand(string $value)
+  protected function buildCommand(string $value): string
   {
     return sprintf("/bin/echo \"%s\" | %s -f -a %s | %s -token -lemma -sgml %s",
       $value,

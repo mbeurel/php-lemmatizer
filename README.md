@@ -132,4 +132,4 @@ try {
 
 ## Credits
 
-Created by [Matthieu Beurel](https://www.mbeurel.com). Sponsored by [Nexboard](https://www.nexboard.fr).
+Created by [Matthieu Beurel](https://www.mbeurel.com). Sponsored by [Yipikai](https://yipikai.studio).

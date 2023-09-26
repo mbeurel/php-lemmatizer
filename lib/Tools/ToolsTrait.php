@@ -10,7 +10,7 @@ trait ToolsTrait
   /**
    * @var array
    */
-  private static $accentsReplacements = array(
+  private static array $accentsReplacements = array(
     "¥" => "Y", "µ" => "u", "À" => "A", "Á" => "A",
     "Â" => "A", "Ã" => "A", "Ä" => "A", "Å" => "A",
     "Æ" => "A", "Ç" => "C", "È" => "E", "É" => "E",
