@@ -309,7 +309,7 @@ class TreeTagger
             $value = $usedSource ? strtolower($source) : $dest;
             $value = $this->removeAccent ? $this->removeAccents($value) : $value;
             $finalArray[$this->uniqueWord ? $value : $key] = $value;
-            $detailArray[$key] = array(
+            $detailArray[$this->uniqueWord ? $value : $key] = array(
               "source"    =>  $source,
               "type"      =>  $type,
               "dest"      =>  $dest
